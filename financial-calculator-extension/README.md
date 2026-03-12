@@ -9,7 +9,7 @@ A lightweight Chrome extension that provides multiple financial tools in a popup
 - **Lumpsum future value calculator**
 - **Inflation impact calculator**
 - **Currency selector (USD, EUR, INR, GBP, JPY)**
-- **Light/Dark theme switch with matching result styling**
+- **Sun/Moon icon toggle for light and dark mode with matching result styling**
 
 ## Load locally in Chrome
 

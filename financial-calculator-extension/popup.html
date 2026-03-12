@@ -8,8 +8,16 @@
   </head>
   <body data-theme="light">
     <main class="app">
-      <h1>Financial Calculator</h1>
-      <p class="subtitle">Quick tools for budgeting and planning.</p>
+      <div class="top-bar">
+        <div>
+          <h1>Financial Calculator</h1>
+          <p class="subtitle">Quick tools for budgeting and planning.</p>
+        </div>
+        <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch to dark mode" title="Switch theme">
+          <span class="theme-icon theme-icon--sun" aria-hidden="true">☀️</span>
+          <span class="theme-icon theme-icon--moon" aria-hidden="true">🌙</span>
+        </button>
+      </div>
 
       <div class="settings-grid">
         <div>
@@ -32,14 +40,6 @@
             <option value="INR">INR (₹)</option>
             <option value="GBP">GBP (£)</option>
             <option value="JPY">JPY (¥)</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="themeType">Theme</label>
-          <select id="themeType">
-            <option value="light">Light</option>
-            <option value="dark">Dark</option>
           </select>
         </div>
       </div>

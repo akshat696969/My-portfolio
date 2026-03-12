@@ -24,6 +24,13 @@ body[data-theme='dark'] {
   padding: 16px;
 }
 
+.top-bar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
 h1 {
   margin: 0;
   font-size: 1.25rem;
@@ -48,6 +55,46 @@ body[data-theme='light'] .subtitle {
 
 body[data-theme='dark'] .subtitle {
   color: #94a3b8;
+}
+
+.theme-toggle {
+  width: auto;
+  min-width: 44px;
+  height: 38px;
+  margin-top: 0;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+body[data-theme='light'] .theme-toggle {
+  background: #ffffff;
+  border-color: #cbd5e1;
+}
+
+body[data-theme='dark'] .theme-toggle {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+.theme-icon {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+body[data-theme='light'] .theme-icon--moon,
+body[data-theme='dark'] .theme-icon--sun {
+  opacity: 0.35;
+}
+
+body[data-theme='light'] .theme-icon--sun,
+body[data-theme='dark'] .theme-icon--moon {
+  opacity: 1;
 }
 
 .settings-grid {
@@ -76,7 +123,7 @@ body[data-theme='dark'] label {
 
 select,
 input,
-button {
+#calculatorForm button {
   width: 100%;
   padding: 8px 10px;
   border-radius: 8px;
@@ -102,28 +149,28 @@ body[data-theme='dark'] input {
   margin-top: 10px;
 }
 
-button {
+#calculatorForm button {
   margin-top: 14px;
   border: none;
   cursor: pointer;
   font-weight: 600;
 }
 
-body[data-theme='light'] button {
+body[data-theme='light'] #calculatorForm button {
   background: #2563eb;
   color: #fff;
 }
 
-body[data-theme='light'] button:hover {
+body[data-theme='light'] #calculatorForm button:hover {
   background: #1d4ed8;
 }
 
-body[data-theme='dark'] button {
+body[data-theme='dark'] #calculatorForm button {
   background: #3b82f6;
   color: #e2e8f0;
 }
 
-body[data-theme='dark'] button:hover {
+body[data-theme='dark'] #calculatorForm button:hover {
   background: #2563eb;
 }
 
