@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Financial Calculator",
+  "description": "A Chrome extension with common financial planning calculators.",
+  "version": "1.0.0",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Financial Calculator"
+  }
+}
