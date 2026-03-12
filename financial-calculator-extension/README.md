@@ -8,6 +8,8 @@ A lightweight Chrome extension that provides multiple financial tools in a popup
 - **Fixed deposit maturity estimator**
 - **Lumpsum future value calculator**
 - **Inflation impact calculator**
+- **Currency selector (USD, EUR, INR, GBP, JPY)**
+- **Light/Dark theme switch with matching result styling**
 
 ## Load locally in Chrome
 

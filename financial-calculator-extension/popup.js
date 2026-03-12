@@ -1,14 +1,41 @@
 const calculatorType = document.getElementById('calculatorType');
+const currencyType = document.getElementById('currencyType');
+const themeType = document.getElementById('themeType');
 const form = document.getElementById('calculatorForm');
 const resultText = document.getElementById('resultText');
 const fieldGroups = document.querySelectorAll('.field-group');
 
-const formatCurrency = (value) =>
-  new Intl.NumberFormat('en-US', {
+const currencyLocaleMap = {
+  USD: 'en-US',
+  EUR: 'de-DE',
+  INR: 'en-IN',
+  GBP: 'en-GB',
+  JPY: 'ja-JP',
+};
+
+const formatCurrency = (value) => {
+  const currency = currencyType.value;
+  const locale = currencyLocaleMap[currency] || 'en-US';
+  return new Intl.NumberFormat(locale, {
     style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: 2,
+    currency,
+    maximumFractionDigits: currency === 'JPY' ? 0 : 2,
   }).format(value);
+};
+
+const renderResult = (lines, finalLine) => {
+  const normalLines = lines
+    .map((line) => `<p class="result-line">${line}</p>`)
+    .join('');
+
+  const final = finalLine ? `<p class="result-line result-line--final">${finalLine}</p>` : '';
+
+  resultText.innerHTML = `${normalLines}${final}`;
+};
+
+const applyTheme = () => {
+  document.body.dataset.theme = themeType.value;
+};
 
 const showFieldsForCalculator = () => {
   const selected = calculatorType.value;
@@ -26,7 +53,7 @@ const showFieldsForCalculator = () => {
     }
   });
 
-  resultText.textContent = 'Enter values and click Calculate.';
+  renderResult(['Enter values and click Calculate.']);
 };
 
 const getNumber = (id) => Number.parseFloat(document.getElementById(id).value || '0');
@@ -82,7 +109,11 @@ form.addEventListener('submit', (event) => {
     const emi = calculateEmi({ principal, annualRate, years });
     const totalPayment = emi * years * 12;
 
-    resultText.textContent = `Monthly EMI: ${formatCurrency(emi)} | Total Payment: ${formatCurrency(totalPayment)}`;
+    renderResult([
+      `Loan amount: ${formatCurrency(principal)}`,
+      `Loan term: ${years} years @ ${annualRate}% annual rate`,
+      `Monthly EMI: ${formatCurrency(emi)}`,
+    ], `Total Payment: ${formatCurrency(totalPayment)}`);
     return;
   }
 
@@ -94,7 +125,11 @@ form.addEventListener('submit', (event) => {
     const futureValue = calculateSipFutureValue({ monthlyInvestment, annualRate, years });
     const investedAmount = monthlyInvestment * years * 12;
 
-    resultText.textContent = `Future Value: ${formatCurrency(futureValue)} | Total Invested: ${formatCurrency(investedAmount)}`;
+    renderResult([
+      `Monthly investment: ${formatCurrency(monthlyInvestment)}`,
+      `Duration: ${years} years @ ${annualRate}% expected annual return`,
+      `Future Value: ${formatCurrency(futureValue)}`,
+    ], `Total Invested: ${formatCurrency(investedAmount)}`);
     return;
   }
 
@@ -104,7 +139,10 @@ form.addEventListener('submit', (event) => {
     const years = getNumber('years');
     const corpus = calculateRetirementCorpus({ currentAmount, annualRate, years });
 
-    resultText.textContent = `Estimated Corpus: ${formatCurrency(corpus)} after ${years} years.`;
+    renderResult([
+      `Current amount: ${formatCurrency(currentAmount)}`,
+      `Growth period: ${years} years @ ${annualRate}%`,
+    ], `Estimated Corpus: ${formatCurrency(corpus)}`);
     return;
   }
 
@@ -115,7 +153,11 @@ form.addEventListener('submit', (event) => {
     const maturityAmount = calculateFutureValueLumpsum({ amount, annualRate, years });
     const interestEarned = maturityAmount - amount;
 
-    resultText.textContent = `FD Maturity: ${formatCurrency(maturityAmount)} | Interest Earned: ${formatCurrency(interestEarned)}`;
+    renderResult([
+      `Principal: ${formatCurrency(amount)}`,
+      `Duration: ${years} years @ ${annualRate}%`,
+      `Interest Earned: ${formatCurrency(interestEarned)}`,
+    ], `FD Maturity: ${formatCurrency(maturityAmount)}`);
     return;
   }
 
@@ -125,7 +167,10 @@ form.addEventListener('submit', (event) => {
     const years = getNumber('years');
     const futureValue = calculateFutureValueLumpsum({ amount, annualRate, years });
 
-    resultText.textContent = `Future Value: ${formatCurrency(futureValue)} from a one-time investment of ${formatCurrency(amount)}.`;
+    renderResult([
+      `One-time investment: ${formatCurrency(amount)}`,
+      `Duration: ${years} years @ ${annualRate}%`,
+    ], `Future Value: ${formatCurrency(futureValue)}`);
     return;
   }
 
@@ -134,8 +179,22 @@ form.addEventListener('submit', (event) => {
   const years = getNumber('years');
   const inflationAdjustedValue = calculateInflationAdjustedValue({ amount, inflationRate, years });
 
-  resultText.textContent = `Today's value after ${years} years of ${inflationRate}% inflation: ${formatCurrency(inflationAdjustedValue)}.`;
+  renderResult([
+    `Future amount target: ${formatCurrency(amount)}`,
+    `Inflation assumption: ${inflationRate}% for ${years} years`,
+  ], `Today's Value: ${formatCurrency(inflationAdjustedValue)}`);
 });
 
 calculatorType.addEventListener('change', showFieldsForCalculator);
+currencyType.addEventListener('change', () => {
+  const existing = resultText.querySelector('.result-line--final');
+  if (existing) {
+    form.requestSubmit();
+    return;
+  }
+  renderResult(['Currency updated. Enter values and click Calculate.']);
+});
+themeType.addEventListener('change', applyTheme);
+
+applyTheme();
 showFieldsForCalculator();
