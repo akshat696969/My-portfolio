@@ -60,6 +60,7 @@ const showFieldsForCalculator = () => {
 };
 
 const getNumber = (id) => Number.parseFloat(document.getElementById(id).value || '0');
+const formatPercent = (value) => `${value.toFixed(2)}%`;
 
 const calculateEmi = ({ principal, annualRate, years }) => {
   const monthlyRate = annualRate / 12 / 100;
@@ -94,6 +95,23 @@ const calculateFutureValueLumpsum = ({ amount, annualRate, years }) =>
 
 const calculateInflationAdjustedValue = ({ amount, inflationRate, years }) =>
   amount / Math.pow(1 + inflationRate / 100, years);
+
+const calculateSavingsGoalMonthlyContribution = ({ goalAmount, currentSavings, annualRate, years }) => {
+  const months = years * 12;
+  const monthlyRate = annualRate / 12 / 100;
+  const futureValueOfCurrentSavings = currentSavings * Math.pow(1 + monthlyRate, months);
+  const remainingGoal = goalAmount - futureValueOfCurrentSavings;
+
+  if (remainingGoal <= 0) {
+    return 0;
+  }
+
+  if (monthlyRate === 0) {
+    return remainingGoal / months;
+  }
+
+  return (remainingGoal * monthlyRate) / (Math.pow(1 + monthlyRate, months) - 1);
+};
 
 form.addEventListener('submit', (event) => {
   event.preventDefault();
@@ -186,17 +204,97 @@ form.addEventListener('submit', (event) => {
     return;
   }
 
-  const amount = getNumber('principal');
-  const inflationRate = getNumber('annualRate');
-  const years = getNumber('years');
-  const inflationAdjustedValue = calculateInflationAdjustedValue({ amount, inflationRate, years });
+  if (selected === 'inflation') {
+    const amount = getNumber('principal');
+    const inflationRate = getNumber('annualRate');
+    const years = getNumber('years');
+    const inflationAdjustedValue = calculateInflationAdjustedValue({ amount, inflationRate, years });
+
+    renderResult(
+      [
+        `Future amount target: ${formatCurrency(amount)}`,
+        `Inflation assumption: ${inflationRate}% for ${years} years`,
+      ],
+      `Today's Value: ${formatCurrency(inflationAdjustedValue)}`
+    );
+    return;
+  }
+
+  if (selected === 'budget') {
+    const monthlyIncome = getNumber('monthlyIncome');
+    const needs = monthlyIncome * 0.5;
+    const wants = monthlyIncome * 0.3;
+    const savings = monthlyIncome * 0.2;
+
+    renderResult(
+      [
+        `Monthly income: ${formatCurrency(monthlyIncome)}`,
+        `Needs (50%): ${formatCurrency(needs)}`,
+        `Wants (30%): ${formatCurrency(wants)}`,
+      ],
+      `Savings/Investments (20%): ${formatCurrency(savings)}`
+    );
+    return;
+  }
+
+  if (selected === 'dti') {
+    const monthlyIncome = getNumber('monthlyIncome');
+    const monthlyDebt = getNumber('monthlyDebt');
+    const dti = monthlyIncome === 0 ? 0 : (monthlyDebt / monthlyIncome) * 100;
+
+    let healthNote = 'High risk zone';
+    if (dti < 20) {
+      healthNote = 'Excellent';
+    } else if (dti < 36) {
+      healthNote = 'Manageable';
+    }
+
+    renderResult(
+      [
+        `Monthly income: ${formatCurrency(monthlyIncome)}`,
+        `Monthly debt payments: ${formatCurrency(monthlyDebt)}`,
+        `DTI Ratio: ${formatPercent(dti)}`,
+      ],
+      `Financial Health: ${healthNote}`
+    );
+    return;
+  }
+
+  if (selected === 'emergency') {
+    const monthlyExpenses = getNumber('monthlyExpenses');
+    const emergencyMonths = getNumber('emergencyMonths');
+    const emergencyTarget = monthlyExpenses * emergencyMonths;
+
+    renderResult(
+      [
+        `Monthly essentials: ${formatCurrency(monthlyExpenses)}`,
+        `Coverage period: ${emergencyMonths} months`,
+      ],
+      `Emergency Fund Target: ${formatCurrency(emergencyTarget)}`
+    );
+    return;
+  }
+
+  const goalAmount = getNumber('goalAmount');
+  const currentSavings = getNumber('currentSavings');
+  const annualRate = getNumber('annualRate');
+  const years = getNumber('goalYears');
+  const monthlyIncome = getNumber('monthlyIncome');
+  const monthlyContribution = calculateSavingsGoalMonthlyContribution({
+    goalAmount,
+    currentSavings,
+    annualRate,
+    years,
+  });
+  const contributionPercentOfIncome = monthlyIncome === 0 ? 0 : (monthlyContribution / monthlyIncome) * 100;
 
   renderResult(
     [
-      `Future amount target: ${formatCurrency(amount)}`,
-      `Inflation assumption: ${inflationRate}% for ${years} years`,
+      `Goal amount: ${formatCurrency(goalAmount)} in ${years} years`,
+      `Current savings: ${formatCurrency(currentSavings)} @ ${annualRate}% annual growth`,
+      `Required contribution as income share: ${formatPercent(contributionPercentOfIncome)}`,
     ],
-    `Today's Value: ${formatCurrency(inflationAdjustedValue)}`
+    `Required Monthly Savings: ${formatCurrency(monthlyContribution)}`
   );
 });
 

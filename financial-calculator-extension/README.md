@@ -10,6 +10,10 @@ A lightweight Chrome extension that provides multiple financial tools in a popup
 - **Inflation impact calculator**
 - **Currency selector (USD, EUR, INR, GBP, JPY)**
 - **Sun/Moon icon toggle for light and dark mode with matching result styling**
+- **50/30/20 budget split calculator**
+- **Debt-to-income (DTI) ratio checker**
+- **Emergency fund target estimator**
+- **Savings goal planner (required monthly contribution)**
 
 ## Load locally in Chrome
 
@@ -60,5 +64,5 @@ zip -r financial-calculator-extension.zip financial-calculator-extension \
 
 ## Notes
 
-- All values are shown in USD format.
+- Values are shown in your selected currency format (USD, EUR, INR, GBP, JPY).
 - Calculations are for planning only and are not financial advice.

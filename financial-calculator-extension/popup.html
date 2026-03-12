@@ -29,6 +29,10 @@
             <option value="fd">Fixed Deposit Maturity</option>
             <option value="lumpsum">Lumpsum Future Value</option>
             <option value="inflation">Inflation Impact</option>
+            <option value="budget">50/30/20 Budget Split</option>
+            <option value="dti">Debt-to-Income (DTI)</option>
+            <option value="emergency">Emergency Fund Target</option>
+            <option value="savingsGoal">Savings Goal Planner</option>
           </select>
         </div>
 
@@ -50,7 +54,7 @@
           <input id="principal" name="principal" type="number" min="0" step="0.01" required />
         </div>
 
-        <div class="field-group" data-calc="emi retirement fd lumpsum inflation">
+        <div class="field-group" data-calc="emi retirement fd lumpsum inflation savingsGoal">
           <label for="annualRate">Annual Rate (%)</label>
           <input id="annualRate" name="annualRate" type="number" min="0" step="0.01" required />
         </div>
@@ -73,6 +77,41 @@
         <div class="field-group" data-calc="retirement fd lumpsum inflation">
           <label for="years">Duration (years)</label>
           <input id="years" name="years" type="number" min="1" step="1" required />
+        </div>
+
+        <div class="field-group" data-calc="budget dti savingsGoal">
+          <label for="monthlyIncome">Monthly Income</label>
+          <input id="monthlyIncome" name="monthlyIncome" type="number" min="0" step="0.01" required />
+        </div>
+
+        <div class="field-group" data-calc="dti">
+          <label for="monthlyDebt">Total Monthly Debt Payments</label>
+          <input id="monthlyDebt" name="monthlyDebt" type="number" min="0" step="0.01" required />
+        </div>
+
+        <div class="field-group" data-calc="emergency">
+          <label for="monthlyExpenses">Monthly Essential Expenses</label>
+          <input id="monthlyExpenses" name="monthlyExpenses" type="number" min="0" step="0.01" required />
+        </div>
+
+        <div class="field-group" data-calc="emergency">
+          <label for="emergencyMonths">Emergency Coverage (months)</label>
+          <input id="emergencyMonths" name="emergencyMonths" type="number" min="1" step="1" required />
+        </div>
+
+        <div class="field-group" data-calc="savingsGoal">
+          <label for="goalAmount">Goal Amount</label>
+          <input id="goalAmount" name="goalAmount" type="number" min="0" step="0.01" required />
+        </div>
+
+        <div class="field-group" data-calc="savingsGoal">
+          <label for="currentSavings">Current Savings</label>
+          <input id="currentSavings" name="currentSavings" type="number" min="0" step="0.01" required />
+        </div>
+
+        <div class="field-group" data-calc="savingsGoal">
+          <label for="goalYears">Time to Goal (years)</label>
+          <input id="goalYears" name="goalYears" type="number" min="1" step="1" required />
         </div>
 
         <button type="submit">Calculate</button>
