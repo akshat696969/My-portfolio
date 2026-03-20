@@ -1,10 +1,38 @@
 {
   "manifest_version": 3,
-  "name": "Financial Calculator",
-  "description": "A Chrome extension with common financial planning calculators.",
+  "name": "Auto Note Taker",
+  "description": "Save highlighted text as notes locally and sync to Supabase when signed in.",
   "version": "1.0.0",
+  "permissions": [
+    "storage",
+    "tabs",
+    "activeTab",
+    "identity"
+  ],
+  "host_permissions": [
+    "<all_urls>",
+    "https://*.supabase.co/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "styles.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Financial Calculator"
+    "default_title": "Auto Note Taker"
   }
 }
