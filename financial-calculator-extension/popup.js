@@ -1,104 +1,147 @@
-const calculatorType = document.getElementById('calculatorType');
-const form = document.getElementById('calculatorForm');
-const resultText = document.getElementById('resultText');
-const fieldGroups = document.querySelectorAll('.field-group');
+const authButton = document.getElementById('authButton');
+const notesContainer = document.getElementById('notesContainer');
+const searchInput = document.getElementById('searchInput');
+const statusText = document.getElementById('statusText');
 
-const formatCurrency = (value) =>
-  new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: 2,
-  }).format(value);
+let allNotes = [];
+let currentUser = null;
 
-const showFieldsForCalculator = () => {
-  const selected = calculatorType.value;
+function escapeHtml(value) {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
 
-  fieldGroups.forEach((group) => {
-    const calculators = group.dataset.calc.split(' ');
-    const shouldShow = calculators.includes(selected);
+function formatDate(value) {
+  return new Intl.DateTimeFormat('en-US', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  }).format(new Date(value));
+}
 
-    group.classList.toggle('hidden', !shouldShow);
-
-    const input = group.querySelector('input');
-    input.required = shouldShow;
-    if (!shouldShow) {
-      input.value = '';
+function groupByDomain(notes) {
+  return notes.reduce((groups, note) => {
+    const key = note.domain || 'unknown';
+    if (!groups[key]) {
+      groups[key] = [];
     }
+    groups[key].push(note);
+    return groups;
+  }, {});
+}
+
+function renderEmptyState(message) {
+  notesContainer.innerHTML = `<div class="empty-state">${escapeHtml(message)}</div>`;
+}
+
+function renderNotes(notes) {
+  if (!notes.length) {
+    renderEmptyState('No notes yet. Highlight text on a page and click “Save Note”.');
+    return;
+  }
+
+  const groupedNotes = groupByDomain(notes);
+  const sections = Object.entries(groupedNotes)
+    .map(([domain, domainNotes]) => {
+      const items = domainNotes
+        .map(
+          (note) => `
+            <article class="note-card" data-note-id="${note.id}">
+              <p class="note-text">${escapeHtml(note.text)}</p>
+              <a class="note-url" href="${escapeHtml(note.url)}" target="_blank">${escapeHtml(note.url)}</a>
+              <div class="note-meta">
+                <span>${formatDate(note.created_at)}</span>
+                <span class="note-source ${note.source === 'cloud' ? 'is-cloud' : 'is-local'}">${note.source}</span>
+              </div>
+              <button class="delete-button" data-note-id="${note.id}">Delete</button>
+            </article>
+          `,
+        )
+        .join('');
+
+      return `
+        <section class="domain-group">
+          <h2>${escapeHtml(domain)}</h2>
+          ${items}
+        </section>
+      `;
+    })
+    .join('');
+
+  notesContainer.innerHTML = sections;
+}
+
+function applySearchFilter() {
+  const query = searchInput.value.trim().toLowerCase();
+  const filtered = allNotes.filter((note) => {
+    const haystack = `${note.text} ${note.url} ${note.domain || ''}`.toLowerCase();
+    return haystack.includes(query);
   });
 
-  resultText.textContent = 'Enter values and click Calculate.';
-};
+  renderNotes(filtered);
+}
 
-const calculateEmi = ({ principal, annualRate, years }) => {
-  const monthlyRate = annualRate / 12 / 100;
-  const months = years * 12;
+async function loadNotes() {
+  const response = await chrome.runtime.sendMessage({ type: 'GET_NOTES' });
+  allNotes = response.notes || [];
+  currentUser = response.user || null;
 
-  if (monthlyRate === 0) {
-    return principal / months;
-  }
+  statusText.textContent = currentUser
+    ? `Signed in as ${currentUser.email}. Local notes and Supabase sync are active.`
+    : 'Local notes are ready. Sign in to sync with Supabase.';
 
-  return (
-    (principal * monthlyRate * Math.pow(1 + monthlyRate, months)) /
-    (Math.pow(1 + monthlyRate, months) - 1)
-  );
-};
+  authButton.textContent = currentUser ? 'Logout' : 'Login with Google';
+  applySearchFilter();
+}
 
-const calculateSipFutureValue = ({ monthlyInvestment, annualRate, years }) => {
-  const monthlyRate = annualRate / 12 / 100;
-  const months = years * 12;
+async function handleDelete(noteId) {
+  await chrome.runtime.sendMessage({
+    type: 'DELETE_NOTE',
+    noteId,
+  });
 
-  if (monthlyRate === 0) {
-    return monthlyInvestment * months;
-  }
+  await loadNotes();
+}
 
-  return (
-    monthlyInvestment *
-    ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate) *
-    (1 + monthlyRate)
-  );
-};
-
-const calculateRetirementCorpus = ({ currentAmount, annualRate, years }) =>
-  currentAmount * Math.pow(1 + annualRate / 100, years);
-
-const getNumber = (id) => Number.parseFloat(document.getElementById(id).value || '0');
-
-form.addEventListener('submit', (event) => {
-  event.preventDefault();
-
-  const selected = calculatorType.value;
-
-  if (selected === 'emi') {
-    const principal = getNumber('principal');
-    const annualRate = getNumber('annualRate');
-    const years = getNumber('loanYears');
-
-    const emi = calculateEmi({ principal, annualRate, years });
-    const totalPayment = emi * years * 12;
-
-    resultText.textContent = `Monthly EMI: ${formatCurrency(emi)} | Total Payment: ${formatCurrency(totalPayment)}`;
+async function handleAuthClick() {
+  if (currentUser) {
+    await chrome.runtime.sendMessage({ type: 'LOGOUT' });
+    await loadNotes();
     return;
   }
 
-  if (selected === 'sip') {
-    const monthlyInvestment = getNumber('principal');
-    const annualRate = getNumber('sipRate');
-    const years = getNumber('sipYears');
+  authButton.disabled = true;
+  authButton.textContent = 'Connecting...';
 
-    const futureValue = calculateSipFutureValue({ monthlyInvestment, annualRate, years });
-    const investedAmount = monthlyInvestment * years * 12;
+  const response = await chrome.runtime.sendMessage({ type: 'LOGIN' });
+  authButton.disabled = false;
 
-    resultText.textContent = `Future Value: ${formatCurrency(futureValue)} | Total Invested: ${formatCurrency(investedAmount)}`;
+  if (!response.success) {
+    statusText.textContent = response.error || 'Google login failed. Check your Supabase setup.';
+    authButton.textContent = 'Login with Google';
     return;
   }
 
-  const currentAmount = getNumber('principal');
-  const annualRate = getNumber('annualRate');
-  const years = getNumber('retirementYears');
-  const corpus = calculateRetirementCorpus({ currentAmount, annualRate, years });
+  await loadNotes();
+}
 
-  resultText.textContent = `Estimated Corpus: ${formatCurrency(corpus)} after ${years} years.`;
+authButton.addEventListener('click', handleAuthClick);
+searchInput.addEventListener('input', applySearchFilter);
+
+notesContainer.addEventListener('click', async (event) => {
+  const deleteButton = event.target.closest('.delete-button');
+  if (!deleteButton) {
+    return;
+  }
+
+  const { noteId } = deleteButton.dataset;
+  await handleDelete(noteId);
 });
 
-calculatorType.addEventListener('change', showFieldsForCalculator);
-showFieldsForCalculator();
+loadNotes().catch((error) => {
+  console.error('Failed to load notes:', error);
+  renderEmptyState('Unable to load notes. Open the background page console for details.');
+});
