@@ -3,61 +3,30 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Financial Calculator</title>
-    <link rel="stylesheet" href="popup.css" />
+    <title>Auto Note Taker</title>
+    <link rel="stylesheet" href="styles.css" />
   </head>
-  <body>
-    <main class="app">
-      <h1>Financial Calculator</h1>
-      <p class="subtitle">Quick tools for budgeting and planning.</p>
-
-      <label for="calculatorType">Calculator</label>
-      <select id="calculatorType">
-        <option value="emi">Loan EMI</option>
-        <option value="sip">SIP Future Value</option>
-        <option value="retirement">Retirement Corpus</option>
-      </select>
-
-      <form id="calculatorForm" novalidate>
-        <div class="field-group" data-calc="emi sip retirement">
-          <label for="principal">Principal / Monthly Investment ($)</label>
-          <input id="principal" name="principal" type="number" min="0" step="0.01" required />
+  <body class="popup-body">
+    <main class="popup-app">
+      <header class="popup-header">
+        <div>
+          <p class="eyebrow">Auto Note Taker</p>
+          <h1>Saved Notes</h1>
         </div>
+        <button id="authButton" class="auth-button">Login with Google</button>
+      </header>
 
-        <div class="field-group" data-calc="emi retirement">
-          <label for="annualRate">Expected Annual Rate (%)</label>
-          <input id="annualRate" name="annualRate" type="number" min="0" step="0.01" required />
-        </div>
-
-        <div class="field-group" data-calc="sip">
-          <label for="sipRate">Expected Annual Return (%)</label>
-          <input id="sipRate" name="sipRate" type="number" min="0" step="0.01" required />
-        </div>
-
-        <div class="field-group" data-calc="emi">
-          <label for="loanYears">Loan Term (years)</label>
-          <input id="loanYears" name="loanYears" type="number" min="1" step="1" required />
-        </div>
-
-        <div class="field-group" data-calc="sip">
-          <label for="sipYears">Investment Duration (years)</label>
-          <input id="sipYears" name="sipYears" type="number" min="1" step="1" required />
-        </div>
-
-        <div class="field-group" data-calc="retirement">
-          <label for="retirementYears">Years to Goal</label>
-          <input id="retirementYears" name="retirementYears" type="number" min="1" step="1" required />
-        </div>
-
-        <button type="submit">Calculate</button>
-      </form>
-
-      <section class="result" id="result" aria-live="polite">
-        <h2>Result</h2>
-        <p id="resultText">Select a calculator and enter values.</p>
+      <section class="toolbar">
+        <input id="searchInput" type="search" placeholder="Search notes or URLs" aria-label="Search notes" />
       </section>
+
+      <section class="status-card" id="statusCard">
+        <p id="statusText">Local notes are ready. Sign in to sync with Supabase.</p>
+      </section>
+
+      <section id="notesContainer" class="notes-container" aria-live="polite"></section>
     </main>
 
-    <script src="popup.js"></script>
+    <script type="module" src="popup.js"></script>
   </body>
 </html>
