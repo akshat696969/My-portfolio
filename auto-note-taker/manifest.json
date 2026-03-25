@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "SnapText",
+  "description": "Save what matters, in one click",
+  "version": "1.0.0",
+  "permissions": ["storage", "identity"],
+  "host_permissions": [
+    "<all_urls>",
+    "https://*.supabase.co/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "SnapText",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

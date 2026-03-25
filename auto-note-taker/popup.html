@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SnapText</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="popup">
+      <header class="popup__header">
+        <h1>SnapText</h1>
+        <p id="authStatus">Not logged in</p>
+      </header>
+
+      <section class="controls">
+        <button id="loginBtn">Login with Google</button>
+        <button id="logoutBtn" class="secondary">Logout</button>
+      </section>
+
+      <section class="controls">
+        <input id="searchInput" type="search" placeholder="Search notes..." />
+      </section>
+
+      <section>
+        <div id="noteList" class="note-list"></div>
+      </section>
+    </main>
+
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>
