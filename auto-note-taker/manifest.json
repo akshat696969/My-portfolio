@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Auto Note Taker",
+  "description": "Highlight text on any page and save notes locally or to Supabase.",
+  "version": "1.0.0",
+  "permissions": ["storage", "identity"],
+  "host_permissions": [
+    "<all_urls>",
+    "https://*.supabase.co/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Auto Note Taker",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
