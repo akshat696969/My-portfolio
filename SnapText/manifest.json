@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "SnapText",
+  "description": "Save what matters, in one click",
+  "version": "1.0.1",
+  "icons": {
+    "16": "snaptext-logo.png",
+    "32": "snaptext-logo.png",
+    "48": "snaptext-logo.png",
+    "128": "snaptext-logo.png"
+  },
+  "permissions": ["storage", "identity", "alarms"],
+  "host_permissions": [
+    "<all_urls>",
+    "https://*.supabase.co/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "SnapText",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "snaptext-logo.png",
+      "32": "snaptext-logo.png",
+      "48": "snaptext-logo.png"
+    }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["locales.js"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

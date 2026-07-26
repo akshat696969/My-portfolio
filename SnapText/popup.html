@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SnapText</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="popup">
+      <header id="popupHeader" class="popup__header">
+        <div class="title-row">
+          <div class="title-wrap">
+            <img src="snaptext-header-logo.png" alt="SnapText logo" class="app-logo" />
+            <h1 class="app-title">SnapText</h1>
+            <span id="planBadge" class="plan-badge">Free</span>
+            <button
+              id="upgradeProBtn"
+              class="upgrade-btn"
+              type="button"
+              aria-label="Upgrade to Pro"
+            >
+              Upgrade to Pro
+            </button>
+          </div>
+          <div class="header-right-col">
+
+          <div class="header-actions">
+            <button
+              id="recycleToggleBtn"
+              class="icon-btn secondary"
+              title="Open Recycle Bin"
+              aria-label="Open Recycle Bin"
+            >
+              <span class="icon-btn__glyph">&#128465;</span>
+              <span id="recycleCountBadge" class="icon-count-badge">0</span>
+            </button>
+            <button id="themeToggle" class="icon-btn" title="Toggle dark mode" aria-label="Toggle dark mode">&#9728;</button>
+          </div>
+          <div class="header-lang-row">
+            <select id="languageSelect" class="language-select" title="Change Language" aria-label="Change Language">
+              <option value="en">EN</option>
+              <option value="es">ES</option>
+              <option value="zh-CN">ZH (Simp)</option>
+              <option value="zh-TW">ZH (Trad)</option>
+              <option value="ru">RU</option>
+              <option value="fr">FR</option>
+              <option value="de">DE</option>
+              <option value="pt-BR">PT (BR)</option>
+              <option value="ja">JA</option>
+              <option value="it">IT</option>
+              <option value="ko">KO</option>
+            </select>
+          </div>
+          </div>
+          </div>
+        </div>
+        <p id="authStatus">Not logged in</p>
+      </header>
+
+      <section id="mainView">
+        <section class="controls auth-controls">
+          <button id="loginBtn">Login with Google</button>
+          <button id="logoutBtn">Logout</button>
+        </section>
+
+        <section class="controls search-controls">
+          <input id="searchInput" type="search" placeholder="Search notes..." />
+        </section>
+
+        <section class="limit-panel">
+          <div class="limit-row">
+            <span id="noteLimitText">Saved notes: 0 / 25</span>
+          </div>
+          <div class="progress-track">
+            <div id="noteLimitBar" class="progress-fill"></div>
+          </div>
+        </section>
+
+        <section class="tag-panel">
+          <div class="controls">
+            <input id="newTagInput" type="text" placeholder="Create custom tag..." />
+            <button id="addTagBtn" class="secondary">Add Tag</button>
+            <button id="removeTagBtn" class="secondary">Delete Tag</button>
+          </div>
+          <div class="controls export-row">
+            <select id="tagFilterSelect" multiple size="3"></select>
+            <button id="filterTagsBtn" class="secondary">Filter</button>
+          </div>
+          <p class="hint-box">Tip: You can select multiple tags to filter notes.</p>
+        </section>
+
+        <section class="export-panel">
+          <div class="controls export-row">
+            <select id="exportFormat">
+              <option value="pdf">PDF</option>
+              <option value="csv">CSV</option>
+              <option value="excel">Excel</option>
+              <option value="markdown">Markdown</option>
+            </select>
+            <button id="exportBtn" class="secondary">Export</button>
+          </div>
+          <div class="select-all-row">
+            <label class="select-all-check">
+              <input id="selectAllVisible" type="checkbox" />
+              <span>Select all notes</span>
+            </label>
+            <button id="deleteSelectedBtn" class="danger">Delete</button>
+          </div>
+        </section>
+
+        <section>
+          <div id="noteList" class="note-list"></div>
+        </section>
+
+        <button
+          id="supportFloatBtn"
+          class="support-float-btn"
+          type="button"
+          title="Contact Support"
+          aria-label="Contact Support"
+        >
+          <span class="support-float-btn__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path d="M5.5 12a6.5 6.5 0 0 1 13 0"></path>
+              <path d="M6.75 12.25h-.5A1.75 1.75 0 0 0 4.5 14v2.25A1.75 1.75 0 0 0 6.25 18h.5a1.25 1.25 0 0 0 1.25-1.25V13.5a1.25 1.25 0 0 0-1.25-1.25Z"></path>
+              <path d="M17.25 12.25h.5A1.75 1.75 0 0 1 19.5 14v2.25A1.75 1.75 0 0 1 17.75 18h-.5A1.25 1.25 0 0 1 16 16.75V13.5a1.25 1.25 0 0 1 1.25-1.25Z"></path>
+              <path d="M12 18v1"></path>
+            </svg>
+          </span>
+        </button>
+      </section>
+
+      <section id="upgradeView" class="upgrade-view" style="display:none;">
+        <div class="upgrade-hero">
+          <div class="upgrade-hero__header">
+            <button id="upgradeBackBtn" class="secondary upgrade-back-btn">&larr; Back</button>
+            <button
+              id="upgradeThemeToggle"
+              class="icon-btn"
+              title="Toggle dark mode"
+              aria-label="Toggle dark mode"
+            >
+              &#9728;
+            </button>
+          </div>
+
+          <div class="upgrade-hero__copy">
+            <p id="upgradeEyebrow" class="upgrade-eyebrow">Premium Access</p>
+            <h2 id="upgradeTitle" class="upgrade-title">Upgrade to Pro</h2>
+            <p id="upgradeSubtitle" class="upgrade-subtitle">Turn your browsing into a powerful knowledge system</p>
+          </div>
+        </div>
+
+        <section class="upgrade-panel pro-features-panel">
+          <div class="upgrade-section-heading">
+            <h3 id="featuresHeading">What Pro unlocks</h3>
+            <p id="featuresSubtitle">Built for people who save often, organize deeply, and export their work cleanly.</p>
+          </div>
+          <div class="pro-feature-list">
+            <div class="pro-feature-item">
+              <span class="pro-feature-item__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false">
+                  <path d="M4 6.75A2.75 2.75 0 0 1 6.75 4h3.1l1.4 1.75h6A2.75 2.75 0 0 1 20 8.5v8.75A2.75 2.75 0 0 1 17.25 20H6.75A2.75 2.75 0 0 1 4 17.25Z" />
+                  <path d="M8 10.25h8M8 13.25h8M8 16.25h5" />
+                </svg>
+              </span>
+              <span>Save up to 100 notes (Free: 25)</span>
+            </div>
+            <div class="pro-feature-item">
+              <span class="pro-feature-item__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false">
+                  <path d="M7.75 4h6.5L19 8.75v9.5A1.75 1.75 0 0 1 17.25 20h-9.5A1.75 1.75 0 0 1 6 18.25v-12.5A1.75 1.75 0 0 1 7.75 4Z" />
+                  <path d="M14 4.5v4.25h4.25M9 11h6M9 14h6M9 17h4" />
+                </svg>
+              </span>
+              <span>Save longer notes (Up to 5000 characters)</span>
+            </div>
+            <div class="pro-feature-item">
+              <span class="pro-feature-item__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false">
+                  <path d="M12 4v9" />
+                  <path d="m8.75 10.75 3.25 3.25 3.25-3.25" />
+                  <path d="M5 15.5v2.75A1.75 1.75 0 0 0 6.75 20h10.5A1.75 1.75 0 0 0 19 18.25V15.5" />
+                </svg>
+              </span>
+              <span>Export your notes to Excel and more formats</span>
+            </div>
+            <div class="pro-feature-item">
+              <span class="pro-feature-item__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false">
+                  <path d="M4.5 6.5h15" />
+                  <path d="M7.5 12h9" />
+                  <path d="M10.5 17.5h3" />
+                </svg>
+              </span>
+              <span>Advanced organization with Filter</span>
+            </div>
+            <div class="pro-feature-item">
+              <span class="pro-feature-item__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false">
+                  <path d="m7.5 14.5-1.75-8h12.5l-1.75 8" />
+                  <path d="M9 6.5 12 3.75 15 6.5" />
+                  <path d="M8.25 14.5h7.5v2.25A3.75 3.75 0 0 1 12 20.5a3.75 3.75 0 0 1-3.75-3.75Z" />
+                </svg>
+              </span>
+              <span>Enjoy a premium Pro experience</span>
+            </div>
+          </div>
+        </section>
+
+        <section id="upgradePricing" class="upgrade-pricing">
+          <button class="pricing-card" type="button" data-plan="monthly">
+            <span class="pricing-card__topline">
+              <span class="pricing-card__name">Monthly</span>
+            </span>
+            <strong class="pricing-card__price">$2.99/month</strong>
+          </button>
+
+          <button class="pricing-card" type="button" data-plan="quarterly">
+            <span class="pricing-card__topline">
+              <span class="pricing-card__name">Quarterly</span>
+            </span>
+            <strong class="pricing-card__price">$7.99 / 3 months</strong>
+            <span class="pricing-card__subtext">$2.66/month</span>
+          </button>
+
+          <button class="pricing-card pricing-card--featured" type="button" data-plan="yearly">
+            <span class="pricing-card__topline">
+              <span class="pricing-card__name">Yearly</span>
+              <span class="pricing-card__badge">Most Popular</span>
+            </span>
+            <strong class="pricing-card__price">$19.99 / year</strong>
+            <span class="pricing-card__subtext">$1.67/month</span>
+            <span class="pricing-card__savings">Save 44%</span>
+          </button>
+        </section>
+
+        <button id="buyProBtn" class="buy-pro-btn" type="button">Buy Pro - $19.99/year</button>
+
+        <div id="upgradeTrust" class="upgrade-trust">
+          <span>Cancel anytime. No hassle.</span>
+          <span>Less than $2/month on yearly plan</span>
+        </div>
+
+        <p id="upgradeReminder" class="upgrade-reminder">
+          Choose a plan, complete purchase, then paste your license key to unlock Pro.
+        </p>
+
+        <section id="licensePanel" class="upgrade-panel upgrade-license-panel">
+          <div class="upgrade-section-heading">
+            <h3 id="licenseHeading">Unlock with your license</h3>
+            <p id="licenseSubtitle">Enter your license key to activate Pro on this browser.</p>
+          </div>
+          <div class="license-row">
+            <input id="licenseKeyInput" type="text" placeholder="Enter your license key" autocomplete="off" />
+            <button id="verifyLicenseBtn" type="button">Verify</button>
+          </div>
+          <p id="licenseStatus" class="license-status" aria-live="polite"></p>
+          <div class="license-actions">
+            <button id="recheckLicenseBtn" class="secondary" type="button">Re-check license</button>
+            <button id="manageSubscriptionBtn" class="secondary" type="button">Manage subscription</button>
+          </div>
+        </section>
+
+        <p id="upgradeManageNote" class="upgrade-manage-note">
+          Billing and cancellation are managed securely on Gumroad. Buy here, then use your receipt or Gumroad account to manage or cancel anytime.
+        </p>
+
+        <p class="upgrade-footer">Thanks for supporting SnapText &#128153;</p>
+      </section>
+
+      <section id="recycleView" class="recycle-view" style="display:none;">
+        <div class="recycle-header">
+          <button id="recycleBackBtn" class="secondary">&larr; Back</button>
+          <h3 class="recycle-title">Recycle Bin</h3>
+        </div>
+        <div class="controls export-row">
+          <button id="restoreSelectedBtn" class="secondary">Restore selected</button>
+          <button id="deleteSelectedBinBtn" class="danger">Delete selected</button>
+        </div>
+        <div class="controls export-row">
+          <button id="restoreAllBtn" class="secondary">Restore All</button>
+          <button id="emptyBinBtn" class="danger">Empty Bin</button>
+        </div>
+        <div id="recycleList" class="note-list"></div>
+        <p class="tip">Notes in the recycle bin are permanently deleted after 3 days.</p>
+      </section>
+
+      <section id="supportView" class="support-view" style="display:none;">
+        <div class="support-header">
+          <button id="supportBackBtn" class="secondary support-back-btn">&larr; Back</button>
+          <h3 class="support-title">Need help?</h3>
+        </div>
+
+        <form id="supportFormPanel" class="support-panel">
+          <div class="support-intro">
+            <p class="support-copy">Share the issue and we’ll review it as quickly as we can.</p>
+          </div>
+
+          <label class="support-field">
+            <span>Category</span>
+            <select id="supportCategory" name="category">
+              <option value="Bug">Bug</option>
+              <option value="Feature Request">Feature Request</option>
+              <option value="Account Issue">Account Issue</option>
+              <option value="Subscription">Subscription</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+
+          <label class="support-field">
+            <span>Message</span>
+            <textarea
+              id="supportMessage"
+              name="message"
+              rows="6"
+              placeholder="Tell us what’s going wrong or what you’d like us to improve..."
+            ></textarea>
+          </label>
+
+          <label class="support-field">
+            <span>Email</span>
+            <input id="supportEmail" name="email" type="email" placeholder="you@example.com" autocomplete="email" />
+          </label>
+
+          <p id="supportStatus" class="support-status" aria-live="polite"></p>
+
+          <div class="support-actions">
+            <button id="supportCancelBtn" class="secondary" type="button">Cancel</button>
+            <button id="supportSendBtn" type="submit">Send Message</button>
+          </div>
+
+          <p class="support-footnote">We typically respond within 1-2 business days.</p>
+
+          <input type="hidden" name="to_email" value="darksharingan555@gmail.com" />
+          <input type="hidden" id="supportAccountEmail" name="account_email" value="" />
+          <input type="hidden" id="supportSentAt" name="sent_at" value="" />
+          <input type="hidden" name="source" value="SnapText extension support form" />
+        </form>
+
+        <section id="supportSuccessPanel" class="support-success" style="display:none;">
+          <div class="support-success__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path d="M20 12a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z"></path>
+              <path d="m8.75 12.25 2.2 2.15 4.3-4.65"></path>
+            </svg>
+          </div>
+          <h4>Message sent</h4>
+          <p>Got it - we’ll get back to you soon.</p>
+        </section>
+      </section>
+
+      <p id="mainFooterTip" class="tip">Tip: Sign in with Google to save notes to the cloud and access them across devices.</p>
+    </main>
+
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>
