@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notes</title>
+    <style>
+      @page { size: A4; margin: 16mm 12mm 16mm 12mm; }
+
+      :root {
+        color-scheme: light;
+        font-family: "Segoe UI", Arial, sans-serif;
+        --content-col: 44%;
+        --time-col: 18%;
+        --link-col: 26%;
+      }
+
+      body {
+        margin: 0;
+        background: #f8fafc;
+        color: #0f172a;
+      }
+
+      .page-shell {
+        margin: 0;
+        background: #ffffff;
+        border: 1px solid #dbe3ef;
+        border-radius: 16px;
+        padding: 18px;
+      }
+
+      .header {
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #dbe3ef;
+      }
+
+      .header-brand {
+        display: none;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+
+      .header-brand img {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        object-fit: contain;
+      }
+
+      .header-brand-text {
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .title {
+        margin: 0;
+        font-size: 22px;
+        letter-spacing: 0.2px;
+      }
+
+      .subtitle {
+        margin-top: 5px;
+        font-size: 11px;
+        color: #64748b;
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        table-layout: fixed;
+        overflow: hidden;
+        border-radius: 12px;
+      }
+
+      thead {
+        display: table-header-group;
+      }
+
+      tr {
+        page-break-inside: avoid;
+      }
+
+      th, td {
+        border: 1px solid #dbe3ef;
+        padding: 9px;
+        font-size: 11px;
+        vertical-align: top;
+      }
+
+      th {
+        background: #dbeafe;
+        color: #1e3a8a;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+      }
+
+      td {
+        word-break: break-word;
+        line-height: 1.45;
+      }
+
+      tbody tr:nth-child(even) td {
+        background: #f8fafc;
+      }
+
+      .col-content { width: var(--content-col); }
+      .col-time { width: var(--time-col); }
+      .col-source { width: 12%; }
+      .col-link { width: var(--link-col); }
+      .col-tags { width: 14%; }
+
+      .footer {
+        display: none;
+        position: fixed;
+        bottom: 4mm;
+        left: 0;
+        right: 0;
+        text-align: center;
+        color: #64748b;
+        font-size: 10px;
+        padding-top: 5px;
+      }
+
+      .status {
+        padding: 20px;
+        color: #475569;
+        font-size: 14px;
+      }
+
+      @media screen {
+        body {
+          padding: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="status" class="status">Preparing document...</div>
+    <div id="pageShell" class="page-shell" hidden>
+      <div class="header">
+        <div id="headerBrand" class="header-brand">
+          <img id="brandLogo" alt="Logo" />
+          <div class="header-brand-text">SnapText</div>
+        </div>
+        <h2 class="title">Notes</h2>
+        <div id="generatedAt" class="subtitle"></div>
+      </div>
+      <table>
+        <thead>
+          <tr id="tableHeadRow"></tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+    <div id="footer" class="footer">Made with SnapText &#10084;&#65039;</div>
+    <script type="module" src="print.js"></script>
+  </body>
+  </html>
