@@ -48,7 +48,6 @@ const emptyBinBtn = document.getElementById("emptyBinBtn");
 const exportFormat = document.getElementById("exportFormat");
 const exportBtn = document.getElementById("exportBtn");
 
-  }
 const deleteSelectedBtn = document.getElementById("deleteSelectedBtn");
 const selectAllVisible = document.getElementById("selectAllVisible");
 const noteLimitText = document.getElementById("noteLimitText");
@@ -56,8 +55,6 @@ const noteLimitBar = document.getElementById("noteLimitBar");
 const newTagInput = document.getElementById("newTagInput");
 const tagFilterSelect = document.getElementById("tagFilterSelect");
 const filterTagsBtn = document.getElementById("filterTagsBtn");
-const supportFloatBtn = document.getElementById("supportFloatBtn");
-const supportBackBtn = document.getElementById("supportBackBtn");
 const supportCancelBtn = document.getElementById("supportCancelBtn");
 const supportSendBtn = document.getElementById("supportSendBtn");
 const supportCategory = document.getElementById("supportCategory");
@@ -616,7 +613,7 @@ function renderNotes(notes) {
   visibleNotes = notes;
 
   if (!notes.length) {
-    noteList.innerHTML = '<p class="empty">No notes yet. Highlight text on any page to save one.</p>';
+    noteList.innerHTML = '<p class="empty" data-i18n="empty">No notes yet. Highlight text on any page to save one.</p>';
     updateSelectAllState();
     return;
   }
@@ -1804,10 +1801,6 @@ function translateUI() {
   const addTagBtn = document.getElementById("addTagBtn");
   if (addTagBtn) addTagBtn.textContent = "+";
 
-  const emptyMsg = document.querySelector('.empty');
-  if (emptyMsg && emptyMsg.dataset.i18n === 'empty') {
-      emptyMsg.textContent = t.emptyNotes;
-  }
   if (exportBtn) exportBtn.textContent = t.exportBtn;
 
   const deleteSelectedBtn = document.getElementById("deleteSelectedBtn");
@@ -1823,10 +1816,22 @@ function translateUI() {
   const tagFilterSelectOption = document.querySelector('#tagFilterSelect option[value=""]');
   if (tagFilterSelectOption) tagFilterSelectOption.textContent = t.filterPlaceholder;
 
-  const supportFloatBtn = document.getElementById("supportFloatBtn");
-  if (supportFloatBtn) supportFloatBtn.childNodes[1].nodeValue = " " + t.supportBtn;
 
   const mainFooterTip = document.getElementById("mainFooterTip");
+    let supportFloatBtn = document.getElementById("supportFloatBtn");
+  if (supportFloatBtn) {
+    const textNode = Array.from(supportFloatBtn.childNodes).find(node => node.nodeType === Node.TEXT_NODE && node.nodeValue.trim() !== "");
+    if (textNode) {
+        textNode.nodeValue = " " + t.supportBtn;
+    } else {
+        supportFloatBtn.innerHTML = `<span class="support-float-btn__icon">❓</span> ${t.supportBtn}`;
+    }
+  }
+
+  const emptyMsg = document.querySelector('.empty');
+  if (emptyMsg) {
+      emptyMsg.textContent = t.emptyNotes;
+  }
   if (mainFooterTip) mainFooterTip.textContent = t.mainFooterTip;
 
 
